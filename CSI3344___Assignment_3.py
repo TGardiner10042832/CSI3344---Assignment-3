@@ -131,7 +131,7 @@ def USEntry():
 def yesOrNo():
 
     while True:
-        answer = input("Please enter Yes(y) or No(n) (Enter q to Quit)")
+        answer = input("\nPlease enter Yes(y) or No(n) (Enter q to Quit)")
         if answer == "y":
             return answer
             break
@@ -142,29 +142,36 @@ def yesOrNo():
             return answer
             break
         else:
-            print("Please enter y or n")
+            print("Please enter y or n or q")
 
 
 ## Student information input
 def studentInformation():
 
     while True:
-        studentID = input("Please enter your 8-digit student ID number.")
+        # Get an 8 digit number code.
+        while True:
+            studentID = input("\nPlease enter your 8-digit student ID number.")
+
+            if len(studentID) == 8 and studentID.isdigit():
+                break
+            else:
+                print("Incorrect input\n")
+ 
         fName = input("Please enter your first name: ")
         lName = input("Please enter your last name: ")
         email = input("Please enter your student email: ")
 
-        print("First name: ", fName, "Last Name: ", "Email: ", email)
+        print("\nStudent ID: ", studentID, "\nFirst name: ", fName, "\nLast Name: ", lName, "\nEmail: ", email, "\n")
 
         print("Is this information correct?")
         ans = yesOrNo()
 
+        # If y = return results. If n = loop again. If q = break out of loop.
         if ans == "y":
             studentInfo = [studentID, fName, lName, email]
             return studentInfo
-        elif ans == "n":
-            studentInformation()
-        else:
+        elif ans == "q":
             break
 
 
@@ -206,9 +213,10 @@ def login():
 ### Main directory
 """ 
 Things to do:
-    - login / login menu
-    - 
-
+    - Need to create/connect to server application to get student information, top 8 units and their average. 
+    - No linked list in Python and dictionary does support duplicates, currently saved as two lists of unitCode and unitScore. 
+      Could create a struct or class or something... or just keep as two lists
+    - SQL database, I need to DL SQL and populate.
 """
 def main():
 
@@ -217,8 +225,6 @@ def main():
 
 
     
-
-
 
 if __name__ == "__main__":
     main()
