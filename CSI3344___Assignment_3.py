@@ -7,6 +7,14 @@ Tristan Gardiner
 Kayl Grau
 """
 
+# Import Pyro4 to mimic online server connection
+import Pyro4
+
+# Set Server-1 connection details
+PORT = 51515
+SERVER = "localhost"
+
+
 
 ## Works out the average of the unit scores.
 ## Takes a list and works out the average.
@@ -190,6 +198,12 @@ def login():
 
         ## This is were we verify user information with the server 
         ## and then return the unit results on the system to display on screen.
+        ## Something like:
+        """ # Copied from demo code for client_demo...
+        print("Connecting to server... ")
+        qualification = honors_Check.getQualification(studentInfo)
+        """
+
 
     elif ans == "n":
         # Not a student, enter the information as well as their completed units and their results.
@@ -220,9 +234,12 @@ Things to do:
 """
 def main():
 
-    ## Start menu (login)
-    login()
+    ## Connect to server (copied from demo - need to create correct path)
+    uri = "Pyro:honorsCheck@"+SERVER+":"+str(PORT)
+    honors_Check = Pyro4.Proxy(uri)
 
+    ## Start menu / login
+    login()
 
     
 
