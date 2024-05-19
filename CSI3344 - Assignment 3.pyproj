@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>c76411f2-846c-4fb1-9f87-26b8d3eca060</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>CSI3344___Assignment_3.py</StartupFile>
+    <StartupFile>client_application.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -21,7 +21,8 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="CSI3344___Assignment_3.py" />
+    <Compile Include="client_application - Copy.py" />
+    <Compile Include="client_application.py" />
     <Compile Include="server-1.py" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />

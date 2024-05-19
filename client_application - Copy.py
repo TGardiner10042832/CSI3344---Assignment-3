@@ -1,7 +1,9 @@
 
+# Previous version before tweeeeeking
+
 """
 CSI3344 - Assignment 3
-Interface Component
+Client Application
 Group 33
 Tristan Gardiner
 Kayl Grau
@@ -14,36 +16,6 @@ import Pyro4
 PORT = 51515
 SERVER = "localhost"
 
-
-
-## Works out the average of the unit scores.
-## Takes a list and works out the average.
-def Average(results):
-    
-    # Create a list of the values.
-    #marks = results
-
-    # Init
-    total = 0
-    gradeCounter = 0
-
-    n = len(results)
-    i = 0
-
-    if (n == 0):
-        return 0
-
-    while results[i] != -1:
-        gradeValue = results[i]
-        total = total + gradeValue
-        gradeCounter += 1
-        i += 1
-
-    if (gradeCounter != 0):
-        average = total/gradeCounter
-        return average
-    else:
-        return 0
 
 """
     Manual entry of the student unit and scores.
@@ -215,8 +187,8 @@ def login():
         print(studentScores)
 
         ## average scores (Takes an a dictionary as a parameter)
-        averageScore = Average(studentScores[1])
-        print("Your average mark is ", averageScore)
+        #averageScore = Average(studentScores[1])                           -> moved to server-1
+        #print("Your average mark is ", averageScore)
 
         ## This is were we verify user information with the server 
         ## and then return the unit results on the system to display on screen.
@@ -240,6 +212,7 @@ def main():
 
     ## Start menu / login
     login()
+    
 
     
 
