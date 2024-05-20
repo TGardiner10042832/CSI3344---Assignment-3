@@ -183,9 +183,6 @@ def IDEntry():
                 print("Incorrect input\n")
 
 
-
-
-
 """
     Yes or No - answers the question
     Just a simple y or n loop, return value y or n
@@ -278,13 +275,16 @@ def login():
         # uCodes = studentScores[0]
         # uScores = studentScores[1]
 
-        uCodes = ["test001", "test002", "test003", "test004", "test005","test006", "test007","test008", "test009","test010", "test011", "test012", "test0013", "test014","test015", "test016", "test017", "test0018"]
-        uScores = [55, 70, 88, 66, 55, 77, 76, 78, 89, 87, 84, 66, 55, 43, 45, 55, 66, 77]
+        uCodes = ["test001", "test002", "test003", "test004", "test005",
+                  "test006", "test007","test008", "test009","test010", 
+                  "test011", "test012", "test0013", "test014","test015", 
+                  "test016", "test017", "test0018"]
+        uScores = [55, 80, 66, 77, 88, 77, 76, 78, 89, 
+                   87, 84, 66, 78, 43, 88, 55, 66, 77]
 
         ## This is were we verify the students eligibility with the server. 
-            # ## Connect to server (copied from demo - need to create correct path)
         eligibility = studentCheck.checkEligibility(uCodes, uScores)
-        
+        print(eligibility)
 
 ### Main directory
 """ 
@@ -295,13 +295,6 @@ Things to do:
     - SQL database, I need to DL SQL and populate.
 """
 def main():
-
-    # # ## Connect to server (copied from demo - need to create correct path)
-    # uri = "Pyro:studentCheck@"+SERVER+":"+str(PORT)
-    # studentCheck = Pyro4.Proxy(uri)
-
-    # test = NOFstudent.printDetails
-    # print(test)
 
     ## Start menu / login
     login()

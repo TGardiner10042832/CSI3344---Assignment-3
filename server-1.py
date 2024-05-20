@@ -29,27 +29,25 @@ class StudentCheck(object):
         unitResults = database.getUserDetails(studentID, fName, lName, email)
     
         # Then check the students eligibility if results returns.
-        if unitResults[0] != None:
+        if unitResults != None:
             eligibility = self.checkEligibility(self, unitResults[0], unitResults[1])
             return eligibility
         else:
             NoStudentMsg = "Student Record not found."
-            return NoStudentMsg
-        
+            return NoStudentMsg    
 
     
     # CheckEligibility checks the given, or retrieved scores, for the given honours criteria.
     def checkEligibility(self, uCodes, uScores):
-        courseAverage = self.average(uScores)
-        top8 = self.top8(uCodes, uScores)
+        UC = uCodes
+        US = uScores
+
+        courseAverage = self.average(US)
+        top8 = self.top8(UC, US)
         average8 = self.average(top8[1])
-        eligibityMSG = self.eligibility(uCodes, uScores)
+        eligibilityMSG = self.eligibility(UC, US, courseAverage, average8)
         
-        
-        # Current results to return
-        print("Ave  : ", courseAverage)
-        print("Top8 : ", top8)
-        print("Ave8 : ", average8)
+        return courseAverage, top8, average8, eligibilityMSG
         
 
     # Get the the averages of a list of numbers. 
@@ -68,8 +66,8 @@ class StudentCheck(object):
 
     # Get the Top 8 units!
     def top8(self, uCodes, uScores):
-        units = uCodes
-        scores = uScores
+        units = uCodes.copy()
+        scores = uScores.copy()
         top8Units = []
         top8Scores = []
 
@@ -100,42 +98,48 @@ class StudentCheck(object):
         return top8Units, top8Scores
 
 
+
     # Checks the eligibility and returns the message for the student to see.
-    def eligibility(self, UC, US, ):
-        
-        # Completed less than 16 units.
-        
+    def eligibility(self, uCodes, uScores, courseAverage, average8):
 
+        length = len(uCodes)
 
+        # Determine the number for failed units.
+        # Count each score below 50.
+        fails = 0
+        for i in range(length):
+            if uScores[i] < 50:
+                fails = fails + 1
 
-        # More than 6 failed results. 
-        
+        # Completed less than 16 units (or 15 or less)
+        if length < 16:
+            msg = "completed less than 16 units! DOES NOT QUALIFY FOR HONORS STUDY!"
 
+        # If there are more than 6 fails.
+        elif fails >= 6:
+            msg = "with 6 or more Fails! DOES NOT QUALIFY FOR HONORS STUDY!"
 
+        # Course Average >= 70
+        elif courseAverage >= 70:
+            msg = "QUALIFIES FOR HONOURS STUDY!"
 
-        # Course Average > 70
-        
+        # If course average is < 70 and >= 65 but average8 >= 80, return 'qualify' message.
+        elif courseAverage < 70 and courseAverage >= 65 and average8 >= 80:
+                msg = ", Top 8 average = " + str(average8) + ", QUALIFIES FOR HONOURS STUDY!"
 
-
-
-        # Course Average >= 60 and Top 8 average >= 80
-        
-        
-        
-        
-        # Course Average >= 65 and < 70, and Top 8 average >= 80
-        
-
-
-
-        # Otherwise, they do not qualify.
-        
-
-
-        # Unit then:
-        pass
+        # If course average is < 70 and >= 65 but average8 < 80, return 'chance' message.
+        elif courseAverage < 70 and courseAverage >= 65 and average8 < 80:
+                msg = ", Top 8 average = " + str(average8) + ", MAY HAVE GOOD CHANCE! Need further assessment!"
     
-
+        # Course average is < 65 and >= 60, but average8 is 80 or higher.    
+        elif courseAverage < 65 and courseAverage >= 60 and average8 >= 80:
+                msg = ", Top 8 average = " + str(average8) + ", MAY HAVE A CHANCE! Must be carefully reassessed and get the coordinator's permission!"
+    
+        # Otherwise, they do not qualify.
+        else:
+            msg = "DOES NOT QUALIFY FOR HONORS STUDY!"
+    
+        return msg
 
 
 # Accept RMI
@@ -143,7 +147,6 @@ studentCheck = StudentCheck()
 daemon = Pyro4.Daemon(port = S1_PORT)
 uri = daemon.register(studentCheck, "studentCheck")
 # ^ this is the URI name used to connect to it.
-
 
 
 print()
