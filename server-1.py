@@ -9,48 +9,51 @@ Kayl Grau
 # Import Pyro4 to get server functionality. 
 import Pyro4
 
-# This is the port for Server-1 and Client connection
+# This is the port for Server-1 (S1_PORT) and the OSCLR database (S2_PORT)
 S1_PORT = 60000
-
-
-"""
-    Check with the database - when it's created...
-    I'm just spitballing this one, need to create and fix... 
-"""
-# @Pyro4.expose
-# class honorsCheck(object):
-
-#     # Lookup student in the database.
-#     def __getUserDetails(self, studentID, lastName, email):
-#         print("Extracting data from the OSCI database... ")
-
-#         # Connect to the OSCLR database with RMI
-#         OSCLRURI = "PYRO:honorsDb@" + OSCLR_SERVER + ":" + str(SA2_PORT)
-#         database = Pyro4.Proxy(OSCLRURI)
-
-#         # Request user details
-#         return database.getUserDetails(studentID, lastName, email)
-
+S2_PORT = 60001
+OSCLR_SERVER = "localhost"
 
 @Pyro4.expose
 class StudentCheck(object):
 
+    # Verify students with the database.
+    def verifyStudent(self, studentID, fName, lName, email):
+        print("Connecting to OCLR database... ")
+        
+        # Connect to the OSCLR database with RMI
+        OSCLRURI = "PYRO:OSCLR@" + OSCLR_SERVER + ":" + str(S2_PORT)
+        database = Pyro4.Proxy(OSCLRURI)
+
+        # Request to verify user details and if correct, return unit codes and scores.
+        unitResults = database.getUserDetails(studentID, fName, lName, email)
+    
+        # Then check the students eligibility if results returns.
+        if unitResults[0] != None:
+            eligibility = self.checkEligibility(self, unitResults[0], unitResults[1])
+            return eligibility
+        else:
+            NoStudentMsg = "Student Record not found."
+            return NoStudentMsg
+        
 
     
     # CheckEligibility checks the given, or retrieved scores, for the given honours criteria.
     def checkEligibility(self, uCodes, uScores):
         courseAverage = self.average(uScores)
-        # top8 = self.top8(uCodes, uScores)
-        # average8 = self.average(top8[1])
-
+        top8 = self.top8(uCodes, uScores)
+        average8 = self.average(top8[1])
+        eligibityMSG = self.eligibility(uCodes, uScores)
+        
+        
+        # Current results to return
         print("Ave  : ", courseAverage)
-        # print("Top8 : ", top8)
-        # print("Ave8 : ", average8)
+        print("Top8 : ", top8)
+        print("Ave8 : ", average8)
         
 
     # Get the the averages of a list of numbers. 
     def average(self, uScore):
-        
         numbers = uScore
         length = len(uScore)
         total = 0
@@ -63,40 +66,75 @@ class StudentCheck(object):
         return average
 
 
-    # Get the Top 8 units!              # not working need to re-Evaluate
+    # Get the Top 8 units!
     def top8(self, uCodes, uScores):
         units = uCodes
         scores = uScores
         top8Units = []
         top8Scores = []
 
-        tempMax = scores[0]
+        tempMax = 0
         count = 0
         length = len(scores)
 
         if length <= 8:
-            return None
+            return uCodes, uScores
 
         while count < 8:
             for i in range(length):
                 if scores[i] >= tempMax:
                     tempMax = scores[i]
                     tempUnit = units[i]
-                    del units[i]
-                    del scores[i]
-                    # length -1
-                    
-            print(i, tempUnit, tempMax, count)
-            
+                    tempIndex = i
+        
             top8Units.append(tempUnit)
             top8Scores.append(tempMax)
-            
-            tempMax = 0
-            # length = length - 1
-            count = count + 1            
+
+            del units[tempIndex]
+            del scores[tempIndex]
         
+            tempMax = 0
+            length = length - 1
+            count = count + 1            
+    
         return top8Units, top8Scores
 
+
+    # Checks the eligibility and returns the message for the student to see.
+    def eligibility(self, UC, US, ):
+        
+        # Completed less than 16 units.
+        
+
+
+
+        # More than 6 failed results. 
+        
+
+
+
+        # Course Average > 70
+        
+
+
+
+        # Course Average >= 60 and Top 8 average >= 80
+        
+        
+        
+        
+        # Course Average >= 65 and < 70, and Top 8 average >= 80
+        
+
+
+
+        # Otherwise, they do not qualify.
+        
+
+
+        # Unit then:
+        pass
+    
 
 
 
